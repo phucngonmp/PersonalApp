@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Text?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<AnchorPane fx:id="mainPane" xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.demo.controllers.TimerController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <Label fx:id="timerLabel" AnchorPane.topAnchor="40" AnchorPane.leftAnchor="40"
+            style="-fx-font-size: 60px;" prefWidth="250" alignment="CENTER"/>
+    <Button fx:id="startBtn" AnchorPane.topAnchor="150" AnchorPane.leftAnchor="130"
+            style="-fx-font-size: 20px;" onAction="#startTimer" prefWidth="80"/>
+    <Label fx:id="chosenTaskLabel" AnchorPane.topAnchor="200" AnchorPane.leftAnchor="40"
+           style="-fx-font-size: 20px;" prefWidth="250" alignment="CENTER_LEFT"
+            text="No task selected"/>
+    <ChoiceBox fx:id="habitChoiceBox" AnchorPane.topAnchor="250" AnchorPane.leftAnchor="40"
+               style="-fx-font-size: 15px;"/>
+
+    <TableView fx:id="taskTableView" AnchorPane.leftAnchor="400" AnchorPane.topAnchor="40" prefHeight="150">
+        <columns>
+            <TableColumn fx:id="taskNameColumn" text="Task Name" prefWidth="200"/>
+            <TableColumn fx:id="taskDateColumn" text="Date" prefWidth="75"/>
+            <TableColumn fx:id="taskTimeColumn" text="Time(h)" prefWidth="50"/>
+            <TableColumn fx:id="taskStatusColumn" text="Status" prefWidth="50"/>
+        </columns>
+    </TableView>
+
+    <TextField fx:id="inputTimeTxtField" AnchorPane.topAnchor="400" AnchorPane.leftAnchor="40"
+               style="-fx-font-size: 20px;"
+               prefWidth="150" alignment="CENTER"/>
+    <Text AnchorPane.topAnchor="370" AnchorPane.leftAnchor="40" text="Set Timer(m)" style="-fx-font-size: 20px;"/>
+    <Button fx:id="setTimeBtn" AnchorPane.topAnchor="400" AnchorPane.leftAnchor="200" text="Set"
+            style="-fx-font-size: 20px;" onAction="#handleSetTimeBtn"/>
+
+    <Button fx:id="pomodoroModeBtn" AnchorPane.topAnchor="500" AnchorPane.leftAnchor="100" text="Pomodoro"
+            style="-fx-font-size: 20px;" onAction="#handlePomodoroModeBtn"/>
+
+    <Label fx:id="poLabel" AnchorPane.topAnchor="300" AnchorPane.leftAnchor="400"  style="-fx-font-size: 20px;" onMouseClicked="#turnOffPomodoroMode"/>
+    <Label fx:id="poTaskLabel" AnchorPane.topAnchor="340" AnchorPane.leftAnchor="400"  style="-fx-font-size: 20px;"/>
+    <Label fx:id="poInfoLabel" AnchorPane.topAnchor="380" AnchorPane.leftAnchor="400"  style="-fx-font-size: 20px;"/>
+    <HBox fx:id="poHBox" spacing="20" AnchorPane.topAnchor="420" AnchorPane.leftAnchor="400"/>
+    <FontIcon fx:id="poIcon" AnchorPane.topAnchor="480" AnchorPane.leftAnchor="500" />
+    <Region AnchorPane.topAnchor="600" AnchorPane.leftAnchor="500"/>
+
+
+</AnchorPane>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.demo.controllers.MainController"
+      prefHeight="400.0" prefWidth="600.0">
+    <HBox spacing="10">
+        <padding>
+            <Insets top="25" right="25" bottom="0" left="25"/>
+        </padding>
+
+        <Button fx:id="toDoListBtn" text="TO DO LIST" onAction="#loadToDolistLayout"></Button>
+        <Button fx:id="timerBtn" text="TIMER" onAction="#loadTimerLayout"></Button>
+        <Button fx:id="StatisticBtn" text="STATISTIC"></Button>
+        <Button fx:id="LearningBtn" text="LEARNING ZONE"></Button>
+        <Button fx:id="QuizBtn" text="QUIZ ZONE"></Button>
+    </HBox>
+
+
+    <!-- Placeholder for other layouts -->
+    <VBox fx:id="contentArea" VBox.vgrow="ALWAYS"/>
+
+</VBox>
