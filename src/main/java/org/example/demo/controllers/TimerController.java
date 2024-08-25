@@ -59,7 +59,7 @@ public class TimerController {
     private TableView<Task> taskTableView;
     @FXML private TableColumn<Task, String> taskNameColumn;
     @FXML private TableColumn<Task, Integer> taskTimeColumn;
-    @FXML private TableColumn<Task, Integer> taskStatusColumn;
+    @FXML private TableColumn<Task, Status> taskStatusColumn;
     @FXML private TableColumn<Task, LocalDate> taskDateColumn;
 
     private TaskService taskService;
@@ -133,18 +133,18 @@ public class TimerController {
         taskTimeColumn.setStyle("-fx-alignment: CENTER");
         taskStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
         taskStatusColumn.setCellFactory(column -> {
-            return new TableCell<Task, Integer>() {
+            return new TableCell<Task, Status>() {
                 private final FontIcon completeIcon = new FontIcon(FontAwesomeSolid.CHECK_CIRCLE);
                 private final FontIcon incompleteIcon = new FontIcon(FontAwesomeSolid.TIMES_CIRCLE);
                 @Override
-                protected void updateItem(Integer status, boolean empty) {
+                protected void updateItem(Status status, boolean empty) {
                     super.updateItem(status, empty);
                     if (empty || status == null) {
                         setText(null);
                         setGraphic(null);
                     } else {
                         // Convert status value to corresponding text
-                        setGraphic(status == 0 ? incompleteIcon : completeIcon);
+                        setGraphic(status == Status.INCOMPLETE ? incompleteIcon : completeIcon);
                     }
                     setAlignment(Pos.CENTER);
                     completeIcon.setIconColor(Color.GREEN);
@@ -179,7 +179,7 @@ public class TimerController {
         onChangeRep(repChoiceBox, pomodoroTimeTxtField);
 
         // set up for task choice box
-        List<Task> incompleteTask = tasks.filtered(task -> task.getStatus() == Status.INCOMPLETE.getCode());
+        List<Task> incompleteTask = tasks.filtered(task -> task.getStatus() == Status.INCOMPLETE);
         ObservableList<Task> choiceBoxItems = FXCollections.observableArrayList(incompleteTask);
         choiceBoxItems.add(null);
         ChoiceBox<Task> choiceBox = new ChoiceBox<>(choiceBoxItems);
@@ -339,7 +339,7 @@ public class TimerController {
                             if(!isRunning && !isPomodoroModeON){
                                 // Handle row click
                                 // if choose same task or a complete task will reset
-                                if(chosenTask == task || task.getStatus() == Status.COMPLETE.getCode()){
+                                if(chosenTask == task || task.getStatus() == Status.COMPLETE){
                                         reset();
                                 } else{
                                     isSet = false;

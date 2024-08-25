@@ -1,6 +1,7 @@
 package org.example.demo.models;
 
 import jakarta.persistence.*;
+import org.example.demo.enums.Status;
 
 import java.time.LocalDate;
 
@@ -15,7 +16,9 @@ public class Task {
 
     private String name;
     private LocalDate date;
-    private int status;
+
+    @Enumerated(EnumType.ORDINAL)
+    private Status status;
 
     @Column(name = "task_time")
     private double taskTime;
@@ -52,11 +55,11 @@ public class Task {
         this.date = date;
     }
 
-    public int getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
@@ -76,7 +79,7 @@ public class Task {
         this.taskTime = taskTime;
     }
 
-    public Task(String name, LocalDate date, int status, double taskTime, Habit habit) {
+    public Task(String name, LocalDate date, Status status, double taskTime, Habit habit) {
         this.name = name;
         this.date = date;
         this.status = status;

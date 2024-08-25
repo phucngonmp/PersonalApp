@@ -1,0 +1,42 @@
+<component name="ArtifactManager">
+  <artifact name="Demo:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Demo_jar</output-path>
+    <root id="root">
+      <element id="archive" name="Demo.jar">
+        <element id="module-output" name="Demo" />
+      </element>
+      <element id="library" level="project" name="Maven: com.mysql:mysql-connector-j:8.0.33" />
+      <element id="library" level="project" name="Maven: org.kordamp.ikonli:ikonli-core:12.3.1" />
+      <element id="library" level="project" name="Maven: com.fasterxml:classmate:1.5.1" />
+      <element id="library" level="project" name="Maven: com.google.protobuf:protobuf-java:3.21.9" />
+      <element id="library" level="project" name="Maven: org.openjfx:javafx-graphics:17.0.6" />
+      <element id="library" level="project" name="Maven: com.sun.istack:istack-commons-runtime:4.1.1" />
+      <element id="library" level="project" name="Maven: jakarta.transaction:jakarta.transaction-api:2.0.1" />
+      <element id="library" level="project" name="Maven: org.glassfish.jaxb:jaxb-runtime:4.0.2" />
+      <element id="library" level="project" name="Maven: org.antlr:antlr4-runtime:4.10.1" />
+      <element id="library" level="project" name="Maven: org.glassfish.jaxb:jaxb-core:4.0.2" />
+      <element id="library" level="project" name="Maven: org.glassfish.jaxb:txw2:4.0.2" />
+      <element id="library" level="project" name="Maven: org.openjfx:javafx-base:win:17.0.6" />
+      <element id="library" level="project" name="Maven: org.openjfx:javafx-controls:win:17.0.6" />
+      <element id="library" level="project" name="Maven: jakarta.inject:jakarta.inject-api:2.0.1" />
+      <element id="library" level="project" name="Maven: io.smallrye:jandex:3.0.5" />
+      <element id="library" level="project" name="Maven: org.kordamp.ikonli:ikonli-fontawesome5-pack:12.3.1" />
+      <element id="library" level="project" name="Maven: jakarta.xml.bind:jakarta.xml.bind-api:4.0.0" />
+      <element id="library" level="project" name="Maven: org.hibernate.common:hibernate-commons-annotations:6.0.6.Final" />
+      <element id="library" level="project" name="Maven: org.openjfx:javafx-graphics:win:17.0.6" />
+      <element id="library" level="project" name="Maven: org.openjfx:javafx-fxml:win:17.0.6" />
+      <element id="library" level="project" name="Maven: jakarta.persistence:jakarta.persistence-api:3.1.0" />
+      <element id="library" level="project" name="Maven: net.bytebuddy:byte-buddy:1.12.18" />
+      <element id="library" level="project" name="Maven: jakarta.activation:jakarta.activation-api:2.1.0" />
+      <element id="library" level="project" name="Maven: org.controlsfx:controlsfx:11.1.2" />
+      <element id="library" level="project" name="Maven: org.kordamp.ikonli:ikonli-javafx:12.3.1" />
+      <element id="library" level="project" name="Maven: org.jboss.logging:jboss-logging:3.5.0.Final" />
+      <element id="library" level="project" name="Maven: org.hibernate.orm:hibernate-core:6.2.7.Final" />
+      <element id="library" level="project" name="Maven: org.eclipse.angus:angus-activation:2.0.0" />
+      <element id="library" level="project" name="Maven: org.openjfx:javafx-controls:17.0.6" />
+      <element id="library" level="project" name="Maven: org.openjfx:javafx-base:17.0.6" />
+      <element id="library" level="project" name="Maven: org.kordamp.bootstrapfx:bootstrapfx-core:0.4.0" />
+      <element id="library" level="project" name="Maven: org.openjfx:javafx-fxml:17.0.6" />
+    </root>
+  </artifact>
+</component>

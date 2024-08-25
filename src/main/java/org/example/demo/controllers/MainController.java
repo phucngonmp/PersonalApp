@@ -3,25 +3,42 @@ package org.example.demo.controllers;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import org.example.demo.Main;
 
 import java.io.IOException;
 
 public class MainController {
 
+
     @FXML
     private VBox contentArea;
 
-    @FXML
-    private Button toDoListBtn;
 
     @FXML
-    private void loadToDolistLayout(){
-        loadLayout("/org/example/demo/ToDoListLayout.fxml");
+    private void loadToDoListLayout() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/demo/ToDoListLayout.fxml"));
+            Pane toDoListLayout = loader.load();
+
+            // Retrieve the ToDoListController
+            ToDoListController toDoListController = loader.getController();
+
+            FXMLLoader calendarLoader = new FXMLLoader(getClass().getResource("/org/example/demo/CalendarLayout.fxml"));
+            Pane calendarLayout = calendarLoader.load();
+            toDoListController.getRightPane().getChildren().add(calendarLayout);
+            CalendarController calendarController = calendarLoader.getController();
+
+
+            // Pass the ToDoListController to the CalendarController
+            calendarController.setToDoListController(toDoListController);
+
+            // Add the layout to the content area
+            contentArea.getChildren().clear();
+            contentArea.getChildren().add(toDoListLayout);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML

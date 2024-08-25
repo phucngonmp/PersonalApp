@@ -98,7 +98,7 @@ public class TaskService {
         Transaction transaction = null;
         try{
             transaction = session.beginTransaction();
-            task.setStatus(status.getCode());
+            task.setStatus(status);
             session.update(task);
             transaction.commit();
         }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<GridPane fx:id="calendarPane" xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="org.example.demo.controllers.CalendarController"
+          HBox.hgrow="ALWAYS">
+    <padding>
+        <Insets top="100" bottom="10" right="0" left="0"/>
+    </padding>
+    <Label text="Mon" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+    <Label text="Tue" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+    <Label text="Wed" GridPane.columnIndex="2" GridPane.rowIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+    <Label text="Thu" GridPane.columnIndex="3" GridPane.rowIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+    <Label text="Fri" GridPane.columnIndex="4" GridPane.rowIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+    <Label text="Sat" GridPane.columnIndex="5" GridPane.rowIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+    <Label text="Sun" GridPane.columnIndex="6" GridPane.rowIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+
+</GridPane>

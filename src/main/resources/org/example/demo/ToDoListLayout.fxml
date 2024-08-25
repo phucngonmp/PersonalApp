@@ -18,8 +18,10 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.Region?>
 <?import java.lang.String?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 <GridPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.demo.controllers.ToDoListController"
-          alignment="TOP_CENTER" >
+          alignment="TOP_CENTER">
     <columnConstraints>
         <ColumnConstraints percentWidth="65"/>
         <ColumnConstraints percentWidth="35"/>
@@ -38,7 +40,7 @@
         </padding>
 
         <HBox GridPane.columnSpan="3" GridPane.columnIndex="0" GridPane.rowIndex="0" alignment="CENTER">
-            <Button fx:id="previouDayButton"
+            <Button fx:id="previousDayButton"
                     onAction="#handlePreviousDayButton">
                 <graphic>
                     <FontIcon iconLiteral="fas-arrow-left" iconSize="32"/>
@@ -46,7 +48,7 @@
             </Button>
             <!-- A pane that will expand to take the remaining space -->
             <Region HBox.hgrow="ALWAYS"/>
-            <Text fx:id="dateText" text="dd/MM/yyyy"/>
+            <Text fx:id="dateText" text="dd/MM/yyyy" style="-fx-font: Tahama; -fx-font-size: 22;" />
             <!-- A pane that will expand to take the remaining space -->
             <Region HBox.hgrow="ALWAYS"/>
             <Button
@@ -60,7 +62,7 @@
         </HBox>
 
         <Text fx:id="title" text="Daily To Do List" GridPane.columnIndex="0" GridPane.rowIndex="1"
-              GridPane.columnSpan="3" GridPane.halignment="CENTER"/>
+              GridPane.columnSpan="3" GridPane.halignment="CENTER" style="-fx-font: Tahama; -fx-font-size: 20;"/>
 
 
 
@@ -98,6 +100,9 @@
             </ChoiceBox>
         </HBox>
         <Button fx:id="addBtn" text="Add" onAction="#addNewTask"/>
+        <Pane fx:id="calendarLayout">
+
+        </Pane>
     </VBox>
 </GridPane>
 

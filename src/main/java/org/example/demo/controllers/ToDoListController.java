@@ -10,8 +10,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.util.StringConverter;
 import org.example.demo.enums.Status;
@@ -36,7 +34,7 @@ public class ToDoListController {
 
     @FXML
     private Text dateText;
-    private LocalDate date;
+    public LocalDate date;
 
     @FXML
     private TextField nameTaskTextField;
@@ -46,40 +44,27 @@ public class ToDoListController {
 
     @FXML
     private ChoiceBox<String> timeChoiceBox;
-
-    @FXML
-    private Button addBtn;
-
-    @FXML
-    private Button nextDayButton;
-
-    @FXML
-    private Button previouDayButton;
-
-    @FXML
-    private Text title;
-
-    @FXML
-    private FontIcon icon;
-
+    
     private TaskService taskService;
     private HabitService habitService;
 
     private static final int TASKS_START_ROW = 5;
 
+    public VBox getRightPane(){
+        return this.rightPane;
+    }
+
     @FXML
     private void initialize() {
-
         taskService = new TaskService(HibernateUtil.getSessionFactory());
         habitService = new HabitService(HibernateUtil.getSessionFactory());
-
-        List<Habit> habitList = habitService.getAllHabitTasks();
 
         // Set initial date is today
         date = LocalDate.now();
         showDate(date);
-        dateText.setFont(Font.font("Tahoma", FontWeight.NORMAL, 22));
-        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+
+        List<Habit> habitList = habitService.getAllHabitTasks();
+
 
         loadTasks();
 
@@ -104,25 +89,29 @@ public class ToDoListController {
             alert.show();
         }
         else{
-            String taskName = nameTaskTextField.getText();
-            Habit habit = habitChoiceBox.getSelectionModel().getSelectedItem();
-            String taskTimeString = timeChoiceBox.getSelectionModel().getSelectedItem();
-            double taskTime = 0;
-            if(!taskTimeString.equals("None")){
-                taskTimeString = taskTimeString.substring(0, taskTimeString.length()-1);
-                taskTime = Double.parseDouble(taskTimeString);
-            }
-            int status = Status.INCOMPLETE.getCode();
-
-            Task task = new Task(taskName, date, status, taskTime, habit);
+            Task task = getTask();
             taskService.addNewTask(task);
             nameTaskTextField.clear();
             timeChoiceBox.setValue("None");
             loadTasks();
         }
     }
+
+    private Task getTask() {
+        String taskName = nameTaskTextField.getText();
+        Habit habit = habitChoiceBox.getSelectionModel().getSelectedItem();
+        String taskTimeString = timeChoiceBox.getSelectionModel().getSelectedItem();
+        double taskTime = 0;
+        if(!taskTimeString.equals("None")){
+            taskTimeString = taskTimeString.substring(0, taskTimeString.length()-1);
+            taskTime = Double.parseDouble(taskTimeString);
+        }
+        return new Task(taskName, date, Status.INCOMPLETE, taskTime, habit);
+    }
+
     // this function also clear all task first
-    private void loadTasks(){
+    public void loadTasks(){
+        showDate(date);
         List<Task> taskList = taskService.getTasksByDate(date);
 
         // clear tasks
@@ -138,10 +127,10 @@ public class ToDoListController {
     }
     private void setUpTask(Task task, int taskIndex, int rowIndex, List<Task> tasks ){
 
-        // will be added to column 0 of leftpane
+        // will be added to column 0 of left pane
         Label taskNameLabel = new Label(taskIndex + ". " + task.getName());
 
-        // will be added to column 1 of leftpane
+        // will be added to column 1 of left pane
         FontIcon habitIcon = new FontIcon(task.getHabit().getIcon());
 
         FontIcon timeIcon = new FontIcon();
@@ -153,7 +142,7 @@ public class ToDoListController {
         }
 
         Label streakLabel = new Label(Integer.toString(task.getHabit().getStreak()));
-        //will be added to column 2 of leftpane
+        //will be added to column 2 of left pane
         CheckBox taskCheckbox = new CheckBox();
         FontIcon deleteIcon = new FontIcon(FontAwesomeSolid.TRASH);
 
@@ -187,7 +176,7 @@ public class ToDoListController {
     private void handleDeleteIcon(FontIcon deleteIcon, Task task){
         // ask user to confirm delete action
         deleteIcon.setOnMouseClicked(mouseEvent -> {
-            if((date.isEqual(LocalDate.now()) || date.isAfter(LocalDate.now())) && task.getStatus() == Status.INCOMPLETE.getCode()){
+            if((date.isEqual(LocalDate.now()) || date.isAfter(LocalDate.now())) && task.getStatus() == Status.INCOMPLETE){
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Delete Confirmation");
                 alert.setHeaderText("Are you sure you want to delete this task?");
@@ -213,7 +202,7 @@ public class ToDoListController {
     // this function will change habit's streak whenever click checkbox
     private void handleTaskCheckBox(CheckBox checkBox, Task task, List<Task> tasks){
 
-        if(task.getStatus() == Status.COMPLETE.getCode()){
+        if(task.getStatus() == Status.COMPLETE){
             checkBox.setSelected(true);
         }
         LocalDate currentDate = LocalDate.now();
@@ -237,7 +226,7 @@ public class ToDoListController {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setContentText("You can only complete this task by using timer");
                 alert.show();
-                checkBox.setSelected(task.getStatus() == Status.COMPLETE.getCode() ? true : false);
+                checkBox.setSelected(task.getStatus() == Status.COMPLETE);
                 mouseEvent.consume();
             }
             else{
@@ -260,7 +249,7 @@ public class ToDoListController {
                     // or all completed task of this habit is one
                     int completedTasksOfAHabit = (int)tasks.stream()
                             .filter(task1 -> task1.getHabit().equals(habit))
-                            .filter(task1 -> task1.getStatus() == Status.COMPLETE.getCode())
+                            .filter(task1 -> task1.getStatus() == Status.COMPLETE)
                             .count();
                     if(tasksOfAHabit == 1 || completedTasksOfAHabit == 1){
                         habitService.changeStreak(habit.getId(), habit.getLatestDate().minusDays(1), -1);
@@ -279,7 +268,7 @@ public class ToDoListController {
     private void setUpHabitChoiceBox(ChoiceBox<Habit> habitChoiceBox, ObservableList<Habit> habitList){
         habitChoiceBox.setItems(habitList);
         habitChoiceBox.setValue(habitList.get(0));
-        habitChoiceBox.setConverter(new StringConverter<Habit>() {
+        habitChoiceBox.setConverter(new StringConverter<>() {
             @Override
             public String toString(Habit habit) {
                 return habit.getName();
@@ -298,14 +287,12 @@ public class ToDoListController {
     @FXML
     private void handleNextDayButton(){
         date = date.plusDays(1);
-        showDate(date);
         loadTasks();
     }
 
     @FXML
     private void handlePreviousDayButton(){
         date = date.minusDays(1);
-        showDate(date);
         loadTasks();
     }
 }
