@@ -48,7 +48,7 @@
             </Button>
             <!-- A pane that will expand to take the remaining space -->
             <Region HBox.hgrow="ALWAYS"/>
-            <Text fx:id="dateText" text="dd/MM/yyyy" style="-fx-font: Tahama; -fx-font-size: 22;" />
+            <Text fx:id="dateText" text="dd/MM/yyyy" style="-fx-font:22 Tahama;" />
             <!-- A pane that will expand to take the remaining space -->
             <Region HBox.hgrow="ALWAYS"/>
             <Button
@@ -62,7 +62,7 @@
         </HBox>
 
         <Text fx:id="title" text="Daily To Do List" GridPane.columnIndex="0" GridPane.rowIndex="1"
-              GridPane.columnSpan="3" GridPane.halignment="CENTER" style="-fx-font: Tahama; -fx-font-size: 20;"/>
+              GridPane.columnSpan="3" GridPane.halignment="CENTER" style="-fx-font:20 Tahama;"/>
 
 
 
@@ -100,6 +100,7 @@
             </ChoiceBox>
         </HBox>
         <Button fx:id="addBtn" text="Add" onAction="#addNewTask"/>
+
         <Pane fx:id="calendarLayout">
 
         </Pane>

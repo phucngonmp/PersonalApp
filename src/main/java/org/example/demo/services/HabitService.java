@@ -1,12 +1,10 @@
 package org.example.demo.services;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.ChoiceBox;
 import javafx.util.StringConverter;
 import org.example.demo.models.Habit;
 import org.example.demo.models.Task;
-import org.example.demo.utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -69,14 +67,13 @@ public class HabitService {
         }
         return habitList;
     }
-    public void changeStreak(int id, LocalDate date, int days){
+    public void updateActiveDays(int id, int daysToUpdate){
         Session session = sessionFactory.openSession();
         Transaction transaction = null;
         try{
             transaction = session.beginTransaction();
             Habit habit = session.get(Habit.class, id);
-            habit.setStreak(habit.getStreak() + days);
-            habit.setLatestDate(date);
+            habit.setActiveDays(habit.getActiveDays() + daysToUpdate);
             session.persist(habit);
             transaction.commit();
         }
@@ -89,6 +86,7 @@ public class HabitService {
         finally {
             session.close();
         }
+
     }
 
 

@@ -17,8 +17,8 @@ public class Habit {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "streak")
-    private int streak;
+    @Column(name = "active_days")
+    private int activeDays;
 
     @Column(name = "icon")
     private String icon;
@@ -48,12 +48,12 @@ public class Habit {
         this.name = name;
     }
 
-    public int getStreak() {
-        return streak;
+    public int getActiveDays() {
+        return activeDays;
     }
 
-    public void setStreak(int streak) {
-        this.streak = streak;
+    public void setActiveDays(int streak) {
+        this.activeDays = streak;
     }
 
     public String getIcon() {
@@ -81,6 +81,6 @@ public class Habit {
 
     @Override
     public String toString() {
-        return "[id: " + this.id + ", name: " + this.name + ", streak: " + this.streak + ", icon: " +this.icon+"]";
+        return "[id: " + this.id + ", name: " + this.name + ", streak: " + this.activeDays + ", icon: " +this.icon+"]";
     }
 }

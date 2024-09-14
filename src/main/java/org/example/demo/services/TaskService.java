@@ -1,6 +1,7 @@
 package org.example.demo.services;
 
 import org.example.demo.enums.Status;
+import org.example.demo.models.Habit;
 import org.example.demo.models.Task;
 import org.example.demo.utils.HibernateUtil;
 import org.hibernate.Session;
@@ -111,6 +112,12 @@ public class TaskService {
         finally {
             session.close();
         }
+    }
+    public int getCompletedTasksOfHabit(List<Task> tasks, Habit habit){
+        return (int) tasks.stream()
+                        .filter(task -> task.getHabit().equals(habit))
+                        .filter(task -> task.getStatus() == Status.COMPLETE)
+                        .count();
     }
 
 

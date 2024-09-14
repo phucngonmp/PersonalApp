@@ -49,11 +49,6 @@ public class TimerController {
     @FXML
     private TextField inputTimeTxtField;
 
-    @FXML
-    private Button setTimeBtn;
-
-    @FXML
-    private Button pomodoroModeBtn;
 
     @FXML
     private TableView<Task> taskTableView;
@@ -132,25 +127,23 @@ public class TimerController {
         taskTimeColumn.setCellValueFactory(new PropertyValueFactory<>("taskTime"));
         taskTimeColumn.setStyle("-fx-alignment: CENTER");
         taskStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
-        taskStatusColumn.setCellFactory(column -> {
-            return new TableCell<Task, Status>() {
-                private final FontIcon completeIcon = new FontIcon(FontAwesomeSolid.CHECK_CIRCLE);
-                private final FontIcon incompleteIcon = new FontIcon(FontAwesomeSolid.TIMES_CIRCLE);
-                @Override
-                protected void updateItem(Status status, boolean empty) {
-                    super.updateItem(status, empty);
-                    if (empty || status == null) {
-                        setText(null);
-                        setGraphic(null);
-                    } else {
-                        // Convert status value to corresponding text
-                        setGraphic(status == Status.INCOMPLETE ? incompleteIcon : completeIcon);
-                    }
-                    setAlignment(Pos.CENTER);
-                    completeIcon.setIconColor(Color.GREEN);
-                    incompleteIcon.setIconColor(Color.RED);
+        taskStatusColumn.setCellFactory(column -> new TableCell<Task, Status>() {
+            private final FontIcon completeIcon = new FontIcon(FontAwesomeSolid.CHECK_CIRCLE);
+            private final FontIcon incompleteIcon = new FontIcon(FontAwesomeSolid.TIMES_CIRCLE);
+            @Override
+            protected void updateItem(Status status, boolean empty) {
+                super.updateItem(status, empty);
+                if (empty || status == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    // Convert status value to corresponding text
+                    setGraphic(status == Status.INCOMPLETE ? incompleteIcon : completeIcon);
                 }
-            };
+                setAlignment(Pos.CENTER);
+                completeIcon.setIconColor(Color.GREEN);
+                incompleteIcon.setIconColor(Color.RED);
+            }
         });
 
         ObservableList<Task> taskObservableList = FXCollections.observableList(tasks);
@@ -183,7 +176,7 @@ public class TimerController {
         ObservableList<Task> choiceBoxItems = FXCollections.observableArrayList(incompleteTask);
         choiceBoxItems.add(null);
         ChoiceBox<Task> choiceBox = new ChoiceBox<>(choiceBoxItems);
-        choiceBox.setConverter(new StringConverter<Task>() {
+        choiceBox.setConverter(new StringConverter<>() {
             @Override
             public String toString(Task task) {
                 return task == null ? "None" : task.getName();
@@ -322,12 +315,9 @@ public class TimerController {
             }
         });
     }
-    private void setPomodoroMode(){
-
-    }
 
     private void handleMouseClickedTaskTable(){
-        taskTableView.setRowFactory(tv -> new TableRow<Task>() {
+        taskTableView.setRowFactory(tv -> new TableRow<>() {
             @Override
             protected void updateItem(Task task, boolean empty) {
                 super.updateItem(task, empty);
@@ -336,20 +326,20 @@ public class TimerController {
                 if (!empty) {
                     setOnMouseClicked(event -> {
                         if (event.getClickCount() == 1) {
-                            if(!isRunning && !isPomodoroModeON){
+                            if (!isRunning && !isPomodoroModeON) {
                                 // Handle row click
                                 // if choose same task or a complete task will reset
-                                if(chosenTask == task || task.getStatus() == Status.COMPLETE){
-                                        reset();
-                                } else{
+                                if (chosenTask == task || task.getStatus() == Status.COMPLETE) {
+                                    reset();
+                                } else {
                                     isSet = false;
                                     chosenTask = task;
-                                    time = (int)(task.getTaskTime()*60);
+                                    time = (int) (task.getTaskTime() * 60);
                                     habitChoiceBox.setValue(task.getHabit());
                                     habitChoiceBox.setDisable(true);
                                     chosenTaskLabel.setText("task: " + task.getName());
-                                    String formattedTaskTime = String.format("%.0f", task.getTaskTime()*60);
-                                    timerLabel.setText(formattedTaskTime+":00");
+                                    String formattedTaskTime = String.format("%.0f", task.getTaskTime() * 60);
+                                    timerLabel.setText(formattedTaskTime + ":00");
                                 }
 
                             }
@@ -382,8 +372,8 @@ public class TimerController {
         String timeString = timerLabel.getText();
         String [] parts = timeString.split(":");
 
-        Long m = Long.parseLong(parts[0]);
-        Long s = Long.parseLong(parts[1]);
+        long m = Long.parseLong(parts[0]);
+        long s = Long.parseLong(parts[1]);
 
         return Duration.ofHours(0).plusMinutes(m).minusSeconds(s);
     }
@@ -465,29 +455,35 @@ public class TimerController {
         stopTimeLine();
         isSet = false;
         // if in pomodoro mode
-        Node node = poHBox.getChildren().get(--poHBoxElementsCount);
-        if(isPomodoroModeON && rep > 0){
-            if(node instanceof FontIcon){
-                FontIcon icon = (FontIcon) node;
-                icon.setIconColor(Color.GRAY);
+        if(isPomodoroModeON){
+            Node node = poHBox.getChildren().get(--poHBoxElementsCount);
+            if(rep > 0){
+                if(node instanceof FontIcon icon){
+                    icon.setIconColor(Color.GRAY);
+                }
+                if(isBreak){
+                    isBreak = false;
+                    timerLabel.setText(pomodoroTime+":00");
+                }else{
+                    isBreak = true;
+                    timerLabel.setText(breakTime+":00");
+                }
+                switchPeriod();
             }
-            if(isBreak){
-                isBreak = false;
-                timerLabel.setText(pomodoroTime+":00");
-            }else{
-                isBreak = true;
-                timerLabel.setText(breakTime+":00");
+            else {
+                if(node instanceof FontIcon icon){
+                    icon.setIconColor(Color.GRAY);
+                }
+                finishTimer();
+                reset();
             }
-            switchPeriod();
         }
         else {
-            if(node instanceof FontIcon){
-                FontIcon icon = (FontIcon) node;
-                icon.setIconColor(Color.GRAY);
-            }
             finishTimer();
             reset();
         }
+
+
     }
 
     public void stopTimeLine(){

@@ -17,6 +17,7 @@ import org.example.demo.models.Habit;
 import org.example.demo.models.Task;
 import org.example.demo.services.HabitService;
 import org.example.demo.services.TaskService;
+import org.example.demo.ui.TaskRowUI;
 import org.example.demo.utils.HibernateUtil;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -47,6 +48,7 @@ public class ToDoListController {
     
     private TaskService taskService;
     private HabitService habitService;
+    private List<Task> tasks;
 
     private static final int TASKS_START_ROW = 5;
 
@@ -112,55 +114,36 @@ public class ToDoListController {
     // this function also clear all task first
     public void loadTasks(){
         showDate(date);
-        List<Task> taskList = taskService.getTasksByDate(date);
+        tasks = taskService.getTasksByDate(date);
 
         // clear tasks
         leftPane.getChildren().removeIf(node -> GridPane.getRowIndex(node) >= TASKS_START_ROW);
         int rowIndex = TASKS_START_ROW; // the start row index of tasks
         int taskIndex = 1;
 
-        for(Task task : taskList){
-            setUpTask(task, taskIndex, rowIndex, taskList);
+        for(Task task : tasks){
+            // setUpTask(task, taskIndex, rowIndex, taskList);
+            includeTaskRowUI(createTaskRowUI(task, taskIndex), rowIndex);
             rowIndex++;
             taskIndex++;
         }
     }
-    private void setUpTask(Task task, int taskIndex, int rowIndex, List<Task> tasks ){
+    private TaskRowUI createTaskRowUI(Task task, int taskIndex){
+        TaskRowUI taskRowUI = new TaskRowUI(taskIndex, task);
+        handleTaskCheckBox(taskRowUI.getCheckBox(), task);
+        handleDeleteIcon(taskRowUI.getDeleteIcon(), task);
+        return taskRowUI;
+    }
 
-        // will be added to column 0 of left pane
-        Label taskNameLabel = new Label(taskIndex + ". " + task.getName());
-
-        // will be added to column 1 of left pane
-        FontIcon habitIcon = new FontIcon(task.getHabit().getIcon());
-
-        FontIcon timeIcon = new FontIcon();
-        Label timeLabel = new Label();
-        if(task.getTaskTime() > 0){
-            timeIcon.setIconCode(FontAwesomeSolid.CLOCK);
-            timeIcon.setIconSize(20);
-            timeLabel.setText(task.getTaskTime() + "h");
-        }
-
-        Label streakLabel = new Label(Integer.toString(task.getHabit().getStreak()));
-        //will be added to column 2 of left pane
-        CheckBox taskCheckbox = new CheckBox();
-        FontIcon deleteIcon = new FontIcon(FontAwesomeSolid.TRASH);
-
-        habitIcon.setIconSize(20);
-        deleteIcon.setIconSize(20);
-        handleDeleteIcon(deleteIcon, task);
-        handleTaskCheckBox(taskCheckbox, task, tasks);
-
-        // create the layout for column 1 include habit icon and streak number
-        HBox column1Layout = createColumnLayout(List.of(timeIcon, timeLabel, habitIcon, streakLabel));
-
-        // create a checkbox and delete icon layout
-        HBox column2Layout = createColumnLayout(List.of(taskCheckbox, deleteIcon));
-
-        // add all to left pane layout columns and set their positions
+    private void includeTaskRowUI(TaskRowUI taskRowUI, int rowIndex){
+        Label taskNameLabel = taskRowUI.getTaskLabel();
+        HBox column1Layout = taskRowUI.getLayout1();
+        HBox column2Layout = taskRowUI.getLayout2();
         leftPane.add(taskNameLabel, 0, rowIndex);
         leftPane.add(column1Layout, 1, rowIndex);
         leftPane.add(column2Layout, 2, rowIndex);
+
+        // decor
         GridPane.setHalignment(taskNameLabel, HPos.LEFT);
         GridPane.setHalignment(column1Layout, HPos.RIGHT);
         GridPane.setHalignment(column2Layout, HPos.RIGHT);
@@ -199,25 +182,18 @@ public class ToDoListController {
         });
     }
 
-    // this function will change habit's streak whenever click checkbox
-    private void handleTaskCheckBox(CheckBox checkBox, Task task, List<Task> tasks){
-
-        if(task.getStatus() == Status.COMPLETE){
-            checkBox.setSelected(true);
-        }
+    // this function will change habit's active days whenever click checkbox
+    private void handleTaskCheckBox(CheckBox checkBox, Task task){
         LocalDate currentDate = LocalDate.now();
         LocalDate lastDate = currentDate.minusDays(1);
-        LocalDate latestStreakDate = task.getHabit().getLatestDate();
-
-        Habit habit = task.getHabit();
-        // count tasks of a habit;
-        int tasksOfAHabit = habitService.countHabit(tasks, habit);
-
         // only current day and one day before it are able to change status
         // note: date variable is determined by which date user is interacting with
         if(date.isAfter(currentDate) || date.isBefore(lastDate)){
             checkBox.setDisable(true);
         }
+
+        Habit selectedHabit = task.getHabit();
+        int completedTasks = taskService.getCompletedTasksOfHabit(tasks, selectedHabit);
 
         // handle mouse clicked
         checkBox.setOnMouseClicked(mouseEvent -> {
@@ -232,32 +208,18 @@ public class ToDoListController {
             else{
                 // case: check the checkbox
                 if(checkBox.isSelected()){
-                    // we only increase streak if the latest streak date is before current date or just have one task of a habit in current date
-
-                    // because if latest modified streak date is current date and have 2 more tasks of a same habit this mean another task already increase streak,
-                    //      so we just change status of task as done but not increase streak in this case;
                     taskService.changeTaskStatus(task, Status.COMPLETE);
-                    if(latestStreakDate.isBefore(currentDate) || tasksOfAHabit == 1 && latestStreakDate.isEqual(currentDate)){
-                        habitService.changeStreak(habit.getId(), currentDate, 1);
+                    if(completedTasks == 0){
+                        habitService.updateActiveDays(selectedHabit.getId(), 1);
                     }
-
                 }
                 // case: uncheck the checkbox
                 else{
-                    // in this case we will decrease the streak and also make the last modified day of streak
-                    // become one day before the last modified day, only if the date which we're interacting has one task of this habit
-                    // or all completed task of this habit is one
-                    int completedTasksOfAHabit = (int)tasks.stream()
-                            .filter(task1 -> task1.getHabit().equals(habit))
-                            .filter(task1 -> task1.getStatus() == Status.COMPLETE)
-                            .count();
-                    if(tasksOfAHabit == 1 || completedTasksOfAHabit == 1){
-                        habitService.changeStreak(habit.getId(), habit.getLatestDate().minusDays(1), -1);
-                    }
                     taskService.changeTaskStatus(task, Status.INCOMPLETE);
-
+                    if(completedTasks == 1){
+                        habitService.updateActiveDays(selectedHabit.getId(), -1);
+                    }
                 }
-
                 // update the UI
                 loadTasks();
             }
