@@ -89,12 +89,11 @@
                 <items>
                     <FXCollections fx:factory="observableArrayList">
                         <String fx:value="None"/>
-                        <String fx:value="0.05h" />
+                        <String fx:value="0.25h" />
                         <String fx:value="0.5h" />
                         <String fx:value="1h" />
                         <String fx:value="1.5h" />
                         <String fx:value="2h" />
-                        <String fx:value="2.5h" />
                     </FXCollections>
                 </items>
             </ChoiceBox>
@@ -102,6 +101,9 @@
         <Button fx:id="addBtn" text="Add" onAction="#addNewTask"/>
 
         <Pane fx:id="calendarLayout">
+            <padding>
+                <Insets top="100" bottom="10" right="0" left="0"/>
+            </padding>
 
         </Pane>
     </VBox>

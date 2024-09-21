@@ -16,9 +16,9 @@
             <Insets top="25" right="25" bottom="0" left="25"/>
         </padding>
 
+        <Button fx:id="StatisticBtn" text="DEADLINE" onAction="#loadDeadlineLayout"></Button>
         <Button text="TO DO LIST" fx:id="todolistBtn" onAction="#loadToDoListLayout"></Button>
         <Button fx:id="timerBtn" text="TIMER" onAction="#loadTimerLayout"></Button>
-        <Button fx:id="StatisticBtn" text="STATISTIC"></Button>
         <Button fx:id="LearningBtn" text="LEARNING ZONE"></Button>
         <Button fx:id="QuizBtn" text="QUIZ ZONE"></Button>
     </HBox>

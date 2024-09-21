@@ -4,8 +4,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -13,20 +11,21 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.StringConverter;
 import org.example.demo.enums.Status;
+import org.example.demo.enums.TaskType;
 import org.example.demo.models.Habit;
 import org.example.demo.models.Task;
 import org.example.demo.services.HabitService;
 import org.example.demo.services.TaskService;
 import org.example.demo.ui.TaskRowUI;
 import org.example.demo.utils.HibernateUtil;
-import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
-public class ToDoListController {
+public class ToDoListController implements HandleCalendar {
+
     @FXML
     private GridPane leftPane;
 
@@ -52,9 +51,15 @@ public class ToDoListController {
 
     private static final int TASKS_START_ROW = 5;
 
+    @FXML
+    private CalendarController calendarController;
+
+
     public VBox getRightPane(){
         return this.rightPane;
     }
+
+
 
     @FXML
     private void initialize() {
@@ -67,10 +72,7 @@ public class ToDoListController {
 
         List<Habit> habitList = habitService.getAllHabitTasks();
 
-
         loadTasks();
-
-        /*code for right pane begin here */
 
         // convert habit list to observable list
         ObservableList<Habit> observableHabitList = FXCollections.observableList(habitList);
@@ -91,7 +93,7 @@ public class ToDoListController {
             alert.show();
         }
         else{
-            Task task = getTask();
+            Task task = createTask();
             taskService.addNewTask(task);
             nameTaskTextField.clear();
             timeChoiceBox.setValue("None");
@@ -99,7 +101,7 @@ public class ToDoListController {
         }
     }
 
-    private Task getTask() {
+    private Task createTask() {
         String taskName = nameTaskTextField.getText();
         Habit habit = habitChoiceBox.getSelectionModel().getSelectedItem();
         String taskTimeString = timeChoiceBox.getSelectionModel().getSelectedItem();
@@ -108,13 +110,13 @@ public class ToDoListController {
             taskTimeString = taskTimeString.substring(0, taskTimeString.length()-1);
             taskTime = Double.parseDouble(taskTimeString);
         }
-        return new Task(taskName, date, Status.INCOMPLETE, taskTime, habit);
+        return new Task(taskName, date, Status.INCOMPLETE, taskTime, habit, TaskType.DAILY);
     }
 
     // this function also clear all task first
     public void loadTasks(){
         showDate(date);
-        tasks = taskService.getTasksByDate(date);
+        tasks = taskService.getDailyTasksByDate(date);
 
         // clear tasks
         leftPane.getChildren().removeIf(node -> GridPane.getRowIndex(node) >= TASKS_START_ROW);
@@ -123,9 +125,7 @@ public class ToDoListController {
 
         for(Task task : tasks){
             // setUpTask(task, taskIndex, rowIndex, taskList);
-            includeTaskRowUI(createTaskRowUI(task, taskIndex), rowIndex);
-            rowIndex++;
-            taskIndex++;
+            includeTaskRowUI(createTaskRowUI(task, taskIndex++), rowIndex++);
         }
     }
     private TaskRowUI createTaskRowUI(Task task, int taskIndex){
@@ -149,13 +149,6 @@ public class ToDoListController {
         GridPane.setHalignment(column2Layout, HPos.RIGHT);
     }
 
-    private HBox createColumnLayout(List<Node> nodes){
-        HBox layout = new HBox();
-        layout.setSpacing(20);
-        layout.setAlignment(Pos.TOP_RIGHT);
-        nodes.forEach(node -> layout.getChildren().add(node));
-        return layout;
-    }
     private void handleDeleteIcon(FontIcon deleteIcon, Task task){
         // ask user to confirm delete action
         deleteIcon.setOnMouseClicked(mouseEvent -> {
@@ -181,6 +174,7 @@ public class ToDoListController {
 
         });
     }
+
 
     // this function will change habit's active days whenever click checkbox
     private void handleTaskCheckBox(CheckBox checkBox, Task task){
@@ -257,4 +251,12 @@ public class ToDoListController {
         date = date.minusDays(1);
         loadTasks();
     }
+
+    @Override
+    public void onDayClicked(LocalDate date) {
+        this.date = date;
+        loadTasks();
+    }
+
+
 }

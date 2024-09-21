@@ -5,41 +5,35 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<?import javafx.geometry.Insets?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 <GridPane fx:id="calendarPane" xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
-          fx:controller="org.example.demo.controllers.CalendarController"
           HBox.hgrow="ALWAYS">
-    <padding>
-        <Insets top="100" bottom="10" right="0" left="0"/>
-    </padding>
 
     <Label fx:id="todayLabel" GridPane.columnIndex="0" GridPane.rowIndex="0"
            GridPane.columnSpan="7" GridPane.halignment="CENTER" onMouseClicked="#today"/>
 
     <Button fx:id="foo1" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER"
-    onAction="#previousMonth">
+    onAction="#previousMonth" prefWidth="100">
         <graphic>
             <FontIcon iconLiteral="fas-arrow-left"/>
         </graphic>
     </Button>
 
     <Button fx:id="foo" GridPane.columnIndex="6" GridPane.rowIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER"
-        onAction="#nextMonth">
+        onAction="#nextMonth" prefWidth="100">
         <graphic>
             <FontIcon iconLiteral="fas-arrow-right"/>
         </graphic>
     </Button>
 
 
-    <Label text="Mon" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
-    <Label text="Tue" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
-    <Label text="Wed" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
-    <Label text="Thu" GridPane.columnIndex="3" GridPane.rowIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
-    <Label text="Fri" GridPane.columnIndex="4" GridPane.rowIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
-    <Label text="Sat" GridPane.columnIndex="5" GridPane.rowIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
-    <Label text="Sun" GridPane.columnIndex="6" GridPane.rowIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+    <Label text="Mon" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" prefHeight="50"/>
+    <Label text="Tue" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" prefHeight="50"/>
+    <Label text="Wed" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" prefHeight="50"/>
+    <Label text="Thu" GridPane.columnIndex="3" GridPane.rowIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" prefHeight="50"/>
+    <Label text="Fri" GridPane.columnIndex="4" GridPane.rowIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" prefHeight="50"/>
+    <Label text="Sat" GridPane.columnIndex="5" GridPane.rowIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" prefHeight="50"/>
+    <Label text="Sun" GridPane.columnIndex="6" GridPane.rowIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" prefHeight="50"/>
 
 </GridPane>

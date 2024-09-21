@@ -10,6 +10,7 @@ import org.example.demo.models.Task;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class TaskRowUI {
@@ -54,6 +55,10 @@ public class TaskRowUI {
         return createColumnLayout(List.of(this.checkBox, this.deleteIcon));
     }
 
+    public Label getDateLabel(){
+        return new Label(task.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+    }
+
     private HBox createColumnLayout(List<Node> nodes){
         HBox layout = new HBox();
         layout.setSpacing(20);
@@ -81,4 +86,7 @@ public class TaskRowUI {
     public CheckBox getCheckBox() {
         return checkBox;
     }
+
+
+
 }

@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.example.demo.controllers.MainController;
 
 import java.io.IOException;
 
@@ -15,6 +16,8 @@ public class Main extends Application {
         Parent root = null;
         try {
             root = loader.load();
+            MainController controller = loader.getController();
+            controller.loadDeadlineLayout();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -13,43 +13,39 @@ import java.time.Year;
 import java.time.format.DateTimeFormatter;
 
 public class CalendarController {
-    @FXML
-    private ToDoListController toDoListController;
+    protected HandleCalendar handleCalendar;
 
-    // This method is called to set the ToDoListController instance
-    public void setToDoListController(ToDoListController controller) {
-        this.toDoListController = controller;
+    public void setDayClickHandler(HandleCalendar handler) {
+        this.handleCalendar = handler;
     }
 
     @FXML
-    private GridPane calendarPane;
+    protected GridPane calendarPane;
 
     @FXML
-    private Label todayLabel;
+    protected Label todayLabel;
 
     private Label monthLabel;
 
     private static final int START_ROW = 3;
     private static final int ROW = 8;
     private static final int COLUMN = 7;
-    private final LocalDate today = LocalDate.now();
+    protected final LocalDate today = LocalDate.now();
     private Month thisMonth = today.getMonth();
     private int thisYear = today.getYear();
 
     @FXML
-    private void initialize() {
+    protected void initialize() {
         loadCalendar();
         todayLabel.setText(today.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
     }
 
-    private void loadCalendar(){
+    protected void loadCalendar(){
 
         monthLabel = new Label(thisMonth.name() + ", "+thisYear);
         calendarPane.add(monthLabel, 1, 1);
         GridPane.setColumnSpan(monthLabel, 5);
         GridPane.setHalignment(monthLabel, HPos.CENTER);
-
-
         LocalDate firstDay = getDate(1);
         int dayIndex = firstDay.getDayOfWeek().getValue()-1;
         int day = 1;
@@ -66,29 +62,33 @@ public class CalendarController {
         }
     }
 
-    private void createDayBtn(int col, int row, int day){
-        Button btn = new Button();
-        btn.setPrefWidth(100);
-        btn.setPadding(new Insets(8,8,8,8));
-        if(getDate(day).isEqual(today))
-            btn.setStyle("-fx-border-color: #ff0000; -fx-border-width: 1px;");
-        btn.setText(day +"");
+    protected void createDayBtn(int col, int row, int day){
+        Button btn = createBtn(day);
         // load tasks of selected day
         btn.setOnMouseClicked(event ->{
-            toDoListController.date = getDate(day);
-            toDoListController.loadTasks();
+            handleCalendar.onDayClicked(getDate(day));
         });
         calendarPane.add(btn, col, row);
     }
 
-    public LocalDate getDate(int day){
+    protected Button createBtn(int day){
+        Button btn = new Button();
+        btn.setPrefWidth(100);
+        btn.setPrefHeight(30);
+        btn.setPadding(new Insets(8,8,8,8));
+        if(getDate(day).isEqual(today))
+            btn.setStyle("-fx-border-color: #ff0000; -fx-border-width: 1px;");
+        btn.setText(day +"");
+        return btn;
+    }
+
+    protected LocalDate getDate(int day){
         return LocalDate.of(thisYear, thisMonth, day);
     }
 
     @FXML
-    public void today(){
-        toDoListController.date = today;
-        toDoListController.loadTasks();
+    protected void today(){
+        handleCalendar.onDayClicked(today);
         thisMonth = today.getMonth();
         thisYear = today.getYear();
         clearCalendar();
@@ -96,27 +96,30 @@ public class CalendarController {
     }
 
     @FXML
-    public void nextMonth(){
+    protected void nextMonth(){
         if(thisMonth == Month.DECEMBER)
             thisYear++;
         thisMonth = thisMonth.plus(1);
-        clearCalendar();
-        loadCalendar();
-
+        reloadCalendar();
     }
 
-    private void clearCalendar() {
+    protected void clearCalendar() {
         calendarPane.getChildren().remove(monthLabel);
         calendarPane.getChildren().removeIf(node -> GridPane.getRowIndex(node) >= START_ROW);
     }
 
     @FXML
-    public void previousMonth(){
+    protected void previousMonth(){
         if(thisMonth == Month.JANUARY)
             thisYear--;
         thisMonth = thisMonth.minus(1);
+        reloadCalendar();
+    }
+
+    protected void reloadCalendar(){
         clearCalendar();
         loadCalendar();
     }
+
 
 }

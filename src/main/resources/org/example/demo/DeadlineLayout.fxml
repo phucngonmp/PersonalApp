@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.collections.FXCollections?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.demo.controllers.DeadlineController"
+            prefHeight="400.0" prefWidth="600.0" HBox.hgrow="ALWAYS">
+    <VBox AnchorPane.leftAnchor="50" AnchorPane.topAnchor="0">
+        <!-- Right Pane -->
+        <VBox fx:id="abovePane">
+            <padding>
+                <Insets top="50" bottom="50" right="0" left="0"/>
+            </padding>
+        </VBox>
+
+        <!-- Upcoming Deadlines Label below the rightPane -->
+        <HBox>
+            <VBox fx:id="deadlineList">
+                <Label style="-fx-font:20 Tahama; -fx-font-weight: bolder">Upcoming Deadlines</Label>
+                <Label fx:id="dateLabel" style="-fx-font:20 Tahama; -fx-font-weight: bolder">date</Label>
+                <padding>
+                    <Insets top="0" bottom="00" right="200" left="0"/>
+                </padding>
+            </VBox>
+            <VBox spacing="10">
+                <Label style="-fx-font:20 Tahama;">Add new Deadline</Label>
+                <TextField fx:id="taskNameTextField" promptText="Enter a task here" prefHeight="50"
+                    prefWidth="200"/>
+                <HBox spacing="20">
+                    <ChoiceBox fx:id="taskTypeChoiceBox" prefWidth="150">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+
+                            </FXCollections>
+                        </items>
+                    </ChoiceBox>
+                    <Label fx:id="taskDeadlineDateLabel" style="-fx-font:16 Tahama;">deadline date</Label>
+                </HBox>
+
+
+                <Button fx:id="addBtn" text="Add" onAction="#addDeadline"/>
+            </VBox>
+        </HBox>
+    </VBox>
+
+</AnchorPane>

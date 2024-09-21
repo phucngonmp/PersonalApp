@@ -1,6 +1,7 @@
 package org.example.demo.services;
 
 import org.example.demo.enums.Status;
+import org.example.demo.enums.TaskType;
 import org.example.demo.models.Habit;
 import org.example.demo.models.Task;
 import org.example.demo.utils.HibernateUtil;
@@ -11,6 +12,7 @@ import org.hibernate.Transaction;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TaskService {
 
@@ -39,6 +41,24 @@ public class TaskService {
         }
     }
 
+    public List<Task> getIncompleteDeadlineTasksByDate(LocalDate date){
+        List<Task> tasks = new ArrayList<>();
+        Session session = sessionFactory.openSession();
+
+        try{
+            tasks = session.createQuery("FROM Task WHERE type > 0 and status = 0 and date =:date", Task.class)
+                    .setParameter("date", date)
+                    .getResultList();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            session.close();
+        }
+        return tasks;
+    }
+
     public List<Task> getAllTasks(){
         List<Task> tasks = new ArrayList<>();
         Session session = sessionFactory.openSession();
@@ -54,13 +74,35 @@ public class TaskService {
         }
         return tasks;
     }
-    public List<Task> getTasksByDate(LocalDate date) {
+    public List<LocalDate> convertToTaskDateList(List<Task> tasks){
+        return tasks.stream().map(Task::getDate).collect(Collectors.toList());
+    }
+
+    public List<Task> getDeadlineTasksByStatus(Status status){
+        List<Task> tasks = new ArrayList<>();
+        Session session = sessionFactory.openSession();
+
+        try{
+            tasks = session.createQuery("FROM Task WHERE type > 0 and status = :status order by date asc ", Task.class)
+                    .setParameter("status", status)
+                    .getResultList();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            session.close();
+        }
+        return tasks;
+    }
+
+    public List<Task> getDailyTasksByDate(LocalDate date) {
         Session session = sessionFactory.openSession();
         Transaction transaction = null;
         List<Task> taskList = new ArrayList<>();
         try {
             transaction = session.beginTransaction();
-            taskList = session.createQuery("FROM Task WHERE date = :date", Task.class)
+            taskList = session.createQuery("FROM Task WHERE date = :date AND type = 0", Task.class)
                                 .setParameter("date", date)
                                 .getResultList();
             transaction.commit();
@@ -74,6 +116,29 @@ public class TaskService {
         }
         return taskList;
     }
+
+    public List<Task> getDeadlineTasksByDate(LocalDate date) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = null;
+        List<Task> taskList = new ArrayList<>();
+        try {
+            transaction = session.beginTransaction();
+            taskList = session.createQuery("FROM Task WHERE date = :date AND type > 0", Task.class)
+                    .setParameter("date", date)
+                    .getResultList();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return taskList;
+    }
+
+
 
     public void deleteTask(Task task){
         Session session = sessionFactory.openSession();

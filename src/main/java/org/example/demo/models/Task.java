@@ -2,6 +2,7 @@ package org.example.demo.models;
 
 import jakarta.persistence.*;
 import org.example.demo.enums.Status;
+import org.example.demo.enums.TaskType;
 
 import java.time.LocalDate;
 
@@ -22,6 +23,10 @@ public class Task {
 
     @Column(name = "task_time")
     private double taskTime;
+
+    @Column(name = "type")
+    private TaskType type;
+
 
     @ManyToOne
     @JoinColumn(name = "habit_id")
@@ -79,11 +84,12 @@ public class Task {
         this.taskTime = taskTime;
     }
 
-    public Task(String name, LocalDate date, Status status, double taskTime, Habit habit) {
+    public Task(String name, LocalDate date, Status status, double taskTime, Habit habit, TaskType type) {
         this.name = name;
         this.date = date;
         this.status = status;
         this.taskTime = taskTime;
         this.habit = habit;
+        this.type = type;
     }
 }
