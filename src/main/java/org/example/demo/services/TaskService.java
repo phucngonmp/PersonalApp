@@ -41,13 +41,12 @@ public class TaskService {
         }
     }
 
-    public List<Task> getIncompleteDeadlineTasksByDate(LocalDate date){
+    public List<Task> getUpcomingDeadlineTasks(){
         List<Task> tasks = new ArrayList<>();
         Session session = sessionFactory.openSession();
 
         try{
-            tasks = session.createQuery("FROM Task WHERE type > 0 and status = 0 and date =:date", Task.class)
-                    .setParameter("date", date)
+            tasks = session.createQuery("FROM Task WHERE type > 0 and status = 0 order by date LIMIT 5", Task.class)
                     .getResultList();
         }
         catch (Exception e){

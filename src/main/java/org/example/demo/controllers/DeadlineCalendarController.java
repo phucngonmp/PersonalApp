@@ -13,17 +13,15 @@ import org.example.demo.utils.HibernateUtil;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class DeadlineCalendarController extends CalendarController {
 
     private Set<LocalDate> incompleteDates;
     private Set<LocalDate> completeDates;
-    // this store gradient of Colors base on deadline dates, closest deadline date will most red
-    // and farthest deadline will be most yellow
+    // this store gradient of Colors based on deadline dates, closest deadline date will most red
+    // and farthest deadline will be most lightyellow
     private HashMap<LocalDate, Color> colorHashMap = new HashMap<>();
     private TaskService taskService;
 
@@ -35,7 +33,6 @@ public class DeadlineCalendarController extends CalendarController {
         // only date contains no incomplete deadlines has green color
         if(incompleteDates.contains(thisDate)){
             Color color = colorHashMap.get(thisDate);
-            // stole from chatGPT
             btn.setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)));
         } else if(completeDates.contains(thisDate)){
             btn.setStyle("-fx-background-color: lightgreen;");
@@ -56,14 +53,18 @@ public class DeadlineCalendarController extends CalendarController {
 
     @Override
     protected void reloadCalendar() {
-        this.incompleteDates = convertToDeadlineDateSet(getDeadlineTasksByStatus(Status.INCOMPLETE));
+        List<Task> sortedIncompleteDeadlines =
+                getDeadlineTasksByStatus(Status.INCOMPLETE).stream()
+                        .sorted(Comparator.comparing(Task::getDate))
+                        .collect(Collectors.toList());
+        this.incompleteDates = convertToDeadlineDateSet(sortedIncompleteDeadlines);
         this.completeDates = convertToDeadlineDateSet(getDeadlineTasksByStatus(Status.COMPLETE));
         reFillColorsMap();
         super.reloadCalendar();
     }
 
     private Set<LocalDate> convertToDeadlineDateSet(List<Task> tasks){
-        Set<LocalDate> set = new HashSet<>(taskService.convertToTaskDateList(tasks));
+        Set<LocalDate> set = new LinkedHashSet<>((taskService.convertToTaskDateList(tasks)));
         return set;
     }
     private List<Task> getDeadlineTasksByStatus(Status status){
@@ -75,6 +76,7 @@ public class DeadlineCalendarController extends CalendarController {
         int size = incompleteDates.size();
         int i = 0;
         for(LocalDate d : incompleteDates){
+            System.out.println(d.toString());
             this.colorHashMap.put(d, createColor(i++, size));
         }
     }
@@ -83,16 +85,19 @@ public class DeadlineCalendarController extends CalendarController {
         // Normalize index between 0 and 1
         double ratio = (double) i / Math.max(size - 1, 1); // Avoid division by zero
 
-        // Set red to full value (1.0) and increase green from 0 to 1 to get red to yellow transition
-        double red = 1.0;  // Red remains constant at 1
-        double green = 1.0 - ratio;  // Green increases from 0 to 1
+        // Set red to remain full (1.0) and green to increase from 0 to 1 as i increases
+        double red = 1.0;      // Red remains constant at 1
+        double green = ratio;  // Green increases from 0 to 1
 
-        // Apply lightening if needed
-        double lighteningFactor = 0.2; // Adjust this value for more or less lightening
-        green = Math.max(0, Math.min(1, green + lighteningFactor));
+        // Ensure light yellow when i is low
+        if (i < size * 0.05) {
+            green = Math.min(1.0, green + 0.2); // Apply slight increase for light yellow effect
+        }
 
-        return new Color(red, green, 0, 1.0); // Blue remains 0 for the red to yellow transition
+        return new Color(red, green, 0, 1.0); // Blue remains 0 for red to yellow transition
     }
+
+
 
 
 

@@ -7,26 +7,34 @@
 <?import javafx.scene.layout.*?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 <GridPane fx:id="calendarPane" xmlns="http://javafx.com/javafx"
-          xmlns:fx="http://javafx.com/fxml"
-          HBox.hgrow="ALWAYS">
+          xmlns:fx="http://javafx.com/fxml" HBox.hgrow="ALWAYS" hgap="2">
+    <!-- Set the column constraints to make sure columns take equal width -->
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS" />
+        <ColumnConstraints hgrow="ALWAYS" />
+        <ColumnConstraints hgrow="ALWAYS" />
+        <ColumnConstraints hgrow="ALWAYS" />
+        <ColumnConstraints hgrow="ALWAYS" />
+        <ColumnConstraints hgrow="ALWAYS" />
+        <ColumnConstraints hgrow="ALWAYS" />
+    </columnConstraints>
 
     <Label fx:id="todayLabel" GridPane.columnIndex="0" GridPane.rowIndex="0"
            GridPane.columnSpan="7" GridPane.halignment="CENTER" onMouseClicked="#today"/>
 
     <Button fx:id="foo1" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER"
-    onAction="#previousMonth" prefWidth="100">
+            onAction="#previousMonth">
         <graphic>
             <FontIcon iconLiteral="fas-arrow-left"/>
         </graphic>
     </Button>
 
     <Button fx:id="foo" GridPane.columnIndex="6" GridPane.rowIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER"
-        onAction="#nextMonth" prefWidth="100">
+            onAction="#nextMonth">
         <graphic>
             <FontIcon iconLiteral="fas-arrow-right"/>
         </graphic>
     </Button>
-
 
     <Label text="Mon" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" prefHeight="50"/>
     <Label text="Tue" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" prefHeight="50"/>
@@ -35,5 +43,4 @@
     <Label text="Fri" GridPane.columnIndex="4" GridPane.rowIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" prefHeight="50"/>
     <Label text="Sat" GridPane.columnIndex="5" GridPane.rowIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" prefHeight="50"/>
     <Label text="Sun" GridPane.columnIndex="6" GridPane.rowIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" prefHeight="50"/>
-
 </GridPane>

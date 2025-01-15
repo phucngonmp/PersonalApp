@@ -73,7 +73,7 @@ public class CalendarController {
 
     protected Button createBtn(int day){
         Button btn = new Button();
-        btn.setPrefWidth(100);
+        btn.setPrefWidth(200);
         btn.setPrefHeight(30);
         btn.setPadding(new Insets(8,8,8,8));
         if(getDate(day).isEqual(today))

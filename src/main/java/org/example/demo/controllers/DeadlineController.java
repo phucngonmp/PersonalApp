@@ -19,6 +19,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,7 +33,10 @@ public class DeadlineController implements HandleCalendar {
     private Pane abovePane;
 
     @FXML
-    private VBox deadlineList;
+    private VBox deadlineVBox;
+
+    @FXML
+    private VBox upcomingVBox;
 
     @FXML
     private Label taskDeadlineDateLabel;
@@ -55,7 +59,8 @@ public class DeadlineController implements HandleCalendar {
         taskService = new TaskService(HibernateUtil.getSessionFactory());
         setUpTaskTypeChoiceBox();
         setDateText();
-        loadDeadlines();
+        loadDeadlinesLayout();
+        loadUpcomingLayout();
     }
 
     private void setOnDeleteClick(FontIcon deleteIcon, Task task){
@@ -83,8 +88,6 @@ public class DeadlineController implements HandleCalendar {
 
     }
 
-
-
     private void setUpTaskTypeChoiceBox(){
         ObservableList<TaskType> taskTypeObservableList = createTaskTypeObservableList();
         this.taskTypeChoiceBox.setItems(taskTypeObservableList);
@@ -110,7 +113,7 @@ public class DeadlineController implements HandleCalendar {
     public void onDayClicked(LocalDate date) {
         this.date = date;
         setDateText();
-        reloadDeadlines();
+        reloadDeadlinesLayout();
     }
 
 
@@ -122,32 +125,37 @@ public class DeadlineController implements HandleCalendar {
             reloadPane();
         }
     }
-    private void loadDeadlines(){
-        int index = 1;
-        for(Task task : taskService.getDeadlineTasksByDate(date)){
-            loadDeadlineRow(index++, task);
-        }
-    }
-    private void clearDeadlines(){
-        this.deadlineList.getChildren().removeIf(node ->
-            this.deadlineList.getChildren().indexOf(node) > 1
-        );
 
+
+
+    private HBox createRowLayout(int index, Task task, boolean isUpcomingRow){
+        TaskRowUI taskRowUI = createTaskRowUI(index, task);
+        if(isUpcomingRow){
+            return createUpcomingRow(taskRowUI);
+        }
+        return createDeadlineRow(taskRowUI);
     }
-    private void loadDeadlineRow(int index, Task task){
+    private TaskRowUI createTaskRowUI(int index, Task task){
         TaskRowUI taskRowUI = new TaskRowUI(index, task);
         setOnDeleteClick(taskRowUI.getDeleteIcon(), task);
         setOnCheckBoxClick(taskRowUI.getCheckBox(), task);
-        HBox rowLayout = createDeadlineRow(taskRowUI);
-        this.deadlineList.getChildren().add(rowLayout);
+        return taskRowUI;
     }
+    private void addRowToVBox(VBox layout, HBox rowLayout){
+        layout.getChildren().add(rowLayout);
+    }
+
     private HBox createDeadlineRow(TaskRowUI taskRowUI){
         HBox rowLayout = new HBox();
         rowLayout.setSpacing(20);
         rowLayout.setPadding(new Insets(10,10,0,0));
         rowLayout.getChildren().add(taskRowUI.getTaskLabel());
         rowLayout.getChildren().add(taskRowUI.getLayout2());
-        rowLayout.getChildren().add(taskRowUI.getDateLabel());
+        return rowLayout;
+    }
+    private HBox createUpcomingRow(TaskRowUI taskRowUI){
+        HBox rowLayout = createDeadlineRow(taskRowUI);
+        rowLayout.getChildren().add(taskRowUI.getDaysLeftLabel());
         return rowLayout;
     }
 
@@ -197,12 +205,34 @@ public class DeadlineController implements HandleCalendar {
      */
     private void reloadPane(){
         calendarController.reloadCalendar();
-        reloadDeadlines();
+        reloadDeadlinesLayout();
+        reloadUpcomingLayout();
     }
+    private void reloadUpcomingLayout(){
+        clearVBoxLayout(upcomingVBox);
+        loadUpcomingLayout();
+    }
+    private void reloadDeadlinesLayout(){
+        clearVBoxLayout(deadlineVBox);
+        loadDeadlinesLayout();
+    }
+    private void loadDeadlinesLayout(){
+        int index = 1;
+        for(Task task : taskService.getDeadlineTasksByDate(date)){
+            addRowToVBox(deadlineVBox, createRowLayout(index++, task, false));
+        }
+    }
+    private void loadUpcomingLayout(){
+        int index = 1;
+        for(Task task : taskService.getUpcomingDeadlineTasks()){
+            addRowToVBox(upcomingVBox, createRowLayout(index++, task, true));
+        }
+    }
+    private void clearVBoxLayout(VBox vBox){
+        vBox.getChildren().removeIf(node ->
+                vBox.getChildren().indexOf(node) > 0
+        );
 
-    private void reloadDeadlines(){
-        clearDeadlines();
-        loadDeadlines();
     }
 
     public void setCalendarController(CalendarController calendarController){

@@ -10,7 +10,7 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="org.example.demo.controllers.MainController"
-      prefHeight="400.0" prefWidth="600.0">
+>
     <HBox spacing="10">
         <padding>
             <Insets top="25" right="25" bottom="0" left="25"/>

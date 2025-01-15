@@ -21,7 +21,7 @@ public class Main extends Application {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        Scene toDoListScene = new Scene(root, 800, 700);
+        Scene toDoListScene = new Scene(root, 1000, 700);
 
         primaryStage.setTitle("Personal App");
         primaryStage.setScene(toDoListScene);

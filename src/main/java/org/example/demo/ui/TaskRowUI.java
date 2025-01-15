@@ -10,7 +10,9 @@ import org.example.demo.models.Task;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class TaskRowUI {
@@ -57,6 +59,9 @@ public class TaskRowUI {
 
     public Label getDateLabel(){
         return new Label(task.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+    }
+    public Label getDaysLeftLabel(){
+        return new Label(ChronoUnit.DAYS.between(LocalDate.now(), task.getDate())+" days left");
     }
 
     private HBox createColumnLayout(List<Node> nodes){
