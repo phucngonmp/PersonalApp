@@ -88,6 +88,38 @@ public class HabitService {
         }
 
     }
+    public List<Object[]> getHabitAndTimeList() {
+        Session session = sessionFactory.openSession();
+        List<Object[]> result = null;
+        try {
+            result = session.createQuery(
+                            "SELECT h.name, SUM(lt.time) FROM Habit h " +
+                                    "JOIN h.learningTimeList lt " +
+                                    "GROUP BY h.id", Object[].class)
+                    .getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+            return result;
+        }
+    }
+    public List<Object[]> getHabitAndTaskList() {
+        Session session = sessionFactory.openSession();
+        List<Object[]> result = null;
+        try {
+            result = session.createQuery(
+                            "SELECT h.name, COUNT(t.id) FROM Habit h " +
+                                    "JOIN h.taskList t " +
+                                    "GROUP BY h.id", Object[].class)
+                    .getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+            return result;
+        }
+    }
 
 
 }

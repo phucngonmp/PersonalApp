@@ -57,6 +57,36 @@ public class TaskService {
         }
         return tasks;
     }
+    public long getTotalNumberCompletedTasks(){
+        long total = 0;
+        Session session = sessionFactory.openSession();
+        try{
+            total = session.createQuery("SELECT COUNT(t.id) FROM Task t WHERE t.status > 0 AND t.type = 0", Long.class)
+                    .getSingleResult();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            session.close();
+        }
+        return total;
+    }
+    public long getTotalNumberTasks(){
+        long total = 0;
+        Session session = sessionFactory.openSession();
+        try{
+            total = session.createQuery("SELECT COUNT(t.id) FROM Task t WHERE t.type = 0", Long.class)
+                    .getSingleResult();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            session.close();
+        }
+        return total;
+    }
 
     public List<Task> getAllTasks(){
         List<Task> tasks = new ArrayList<>();

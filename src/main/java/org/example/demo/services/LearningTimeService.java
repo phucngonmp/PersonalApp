@@ -7,6 +7,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class LearningTimeService {
     private final SessionFactory sessionFactory;
@@ -36,6 +37,22 @@ public class LearningTimeService {
         finally {
             session.close();
         }
-
     }
+    public double getTotalLearningTime(){
+        Session session = sessionFactory.openSession();
+        double total = 0;
+        try{
+            String hql = "SELECT SUM(time) FROM LearningTime ";
+            total = session.createQuery(hql, Double.class).getSingleResult();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            session.close();
+            return total;
+        }
+    }
+
+
 }

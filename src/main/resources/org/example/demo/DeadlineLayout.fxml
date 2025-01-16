@@ -15,12 +15,12 @@
         </VBox>
 
         <!-- Upcoming Deadlines Label below the rightPane -->
-        <HBox spacing="50">
+        <HBox spacing="30">
             <VBox fx:id="deadlineVBox" prefWidth="300">
                 <Label fx:id="dateLabel" style="-fx-font:20 Tahama; -fx-font-weight: bolder">date</Label>
 
             </VBox>
-            <VBox fx:id="upcomingVBox" prefWidth="250">
+            <VBox fx:id="upcomingVBox" prefWidth="300">
                 <Label style="-fx-font:20 Tahama; -fx-font-weight: bolder">Upcoming Deadlines</Label>
 
             </VBox>

@@ -61,7 +61,8 @@ public class TaskRowUI {
         return new Label(task.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
     }
     public Label getDaysLeftLabel(){
-        return new Label(ChronoUnit.DAYS.between(LocalDate.now(), task.getDate())+" days left");
+        long days = ChronoUnit.DAYS.between(LocalDate.now(), task.getDate());
+        return new Label(Math.abs(days) + (days < 0 ? " days overdue" : " days left"));
     }
 
     private HBox createColumnLayout(List<Node> nodes){

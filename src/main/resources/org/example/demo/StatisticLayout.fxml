@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.demo.controllers.StatisticController"
+            prefHeight="400.0" prefWidth="600.0">
+    <Label AnchorPane.leftAnchor="50" AnchorPane.topAnchor="50"
+           style="-fx-font:20 Tahama;">Total Learning Time: </Label>
+    <Label fx:id="totalLearningTimeLabel" AnchorPane.leftAnchor="250"
+           AnchorPane.topAnchor="50" style="-fx-font:20 Tahama; -fx-font-weight: bold"/>
+    <Label AnchorPane.leftAnchor="550" AnchorPane.topAnchor="50"
+           style="-fx-font:20 Tahama;">Completed Tasks: </Label>
+    <Label fx:id="totalCompletedTasks" AnchorPane.leftAnchor="750"
+           AnchorPane.topAnchor="50" style="-fx-font:20 Tahama; -fx-font-weight: bold"/>
+    <BarChart fx:id="timeChart" AnchorPane.topAnchor="200" AnchorPane.leftAnchor="0">
+        <xAxis>
+            <CategoryAxis label="Habit" />
+        </xAxis>
+        <yAxis>
+            <NumberAxis label="time(m)" />
+        </yAxis>
+    </BarChart>
+    <BarChart fx:id="taskChart" AnchorPane.topAnchor="200" AnchorPane.leftAnchor="500">
+        <xAxis>
+            <CategoryAxis label="Habit" />
+        </xAxis>
+        <yAxis>
+            <NumberAxis label="Task done" />
+        </yAxis>
+    </BarChart>
+
+</AnchorPane>

@@ -28,6 +28,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class TimerController {
@@ -71,6 +72,7 @@ public class TimerController {
     private boolean isPomodoroModeON = false;
     private boolean isBreak = false;
 
+    @FXML private Button poButton;
     @FXML private Label poLabel;
     @FXML private Label poTaskLabel;
     @FXML private HBox poHBox;
@@ -84,10 +86,16 @@ public class TimerController {
     private Integer time = 30;
     private Timeline timeline;
     // is timeline running
-    private boolean isRunning = false;
+    public boolean isRunning = false;
     // is the timeline already set
     private boolean isSet = false;
     private Task chosenTask;
+
+    private MainController mainController;
+
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
 
     private ObservableList<Task> getTodayTasks(){
         List<Task> tempTasks = taskService.getAllTasks().stream()
@@ -226,19 +234,28 @@ public class TimerController {
     }
     @FXML
     private void turnOffPomodoroMode(){
-        mainPane.setStyle("-fx-background-color: #F4F4F4;");
         if(isRunning){
             return;
         }
-        timerLabel.setText("00:00");
-        mainPane.getChildren().remove(poIcon);
-        poInfoLabel.setText("");
-        isPomodoroModeON = false;
-        habitChoiceBox.setValue(null);
-        poLabel.setText("");
-        habitChoiceBox.setDisable(false);
-        poHBox.getChildren().clear();
-        poTaskLabel.setText("");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Warning!!!!");
+        alert.setHeaderText("This action will reset all progress!");
+        alert.setContentText("Are you sure to quit Pomodoro mode");
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if(result.isPresent() && result.get() == ButtonType.OK){
+            mainPane.setStyle("-fx-background-color: #F4F4F4;");
+            timerLabel.setText("00:00");
+            mainPane.getChildren().remove(poIcon);
+            poInfoLabel.setText("");
+            poLabel.setText("");
+            isPomodoroModeON = false;
+            habitChoiceBox.setValue(null);
+            poButton.setVisible(false);
+            habitChoiceBox.setDisable(false);
+            poHBox.getChildren().clear();
+            poTaskLabel.setText("");
+        }
     }
     private void turnOnPomodoroMode(){
         mainPane.setStyle("-fx-background-color: #FFCCCC;");
@@ -249,7 +266,8 @@ public class TimerController {
             mainPane.getChildren().add(poIcon);
         isSet = false;
         isPomodoroModeON = true;
-        poLabel.setText("Pomodoro Mode: ON       Time: " + time +"m");
+        poButton.setVisible(true);
+        poLabel.setText("Time: " + time +"m");
         poInfoLabel.setText("Pomodoro: " + pomodoroTime + "m, Break: " + breakTime+"m");
         switchPeriod();
         if(pomodoroSelectedTask == null){
@@ -432,6 +450,8 @@ public class TimerController {
 
             // adjust flags
             isRunning = true;
+            mainController.isTimerRunning = true;
+            mainController.isTimerInProgress = true;
             isSet = true;
             startBtn.setGraphic(new FontIcon(FontAwesomeSolid.STOP));
             habitChoiceBox.setDisable(true);
@@ -446,6 +466,7 @@ public class TimerController {
             else {
                 timeline.play();
                 isRunning = true;
+                mainController.isTimerRunning = true;
                 startBtn.setGraphic(new FontIcon(FontAwesomeSolid.STOP));
             }
         }
@@ -488,11 +509,13 @@ public class TimerController {
 
     public void stopTimeLine(){
         isRunning = false;
+        mainController.isTimerRunning = false;
         startBtn.setGraphic(new FontIcon(FontAwesomeSolid.PLAY));
         timeline.stop();
     }
 
     private void finishTimer(){
+        mainController.isTimerInProgress = false;
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Congratulation");
         if(chosenTask != null){

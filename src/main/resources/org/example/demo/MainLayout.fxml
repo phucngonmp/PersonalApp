@@ -19,8 +19,7 @@
         <Button fx:id="StatisticBtn" text="DEADLINE" onAction="#loadDeadlineLayout"></Button>
         <Button text="TO DO LIST" fx:id="todolistBtn" onAction="#loadToDoListLayout"></Button>
         <Button fx:id="timerBtn" text="TIMER" onAction="#loadTimerLayout"></Button>
-        <Button fx:id="LearningBtn" text="LEARNING ZONE"></Button>
-        <Button fx:id="QuizBtn" text="QUIZ ZONE"></Button>
+        <Button fx:id="LearningBtn" text="STATISTIC" onAction="#loadStatisticLayout"></Button>
     </HBox>
 
 
